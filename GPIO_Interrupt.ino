@@ -1,17 +1,14 @@
-const byte ledPin = 2;       // Builtin-LED pin
-const byte interruptPin = 0; // BOOT/IO0 button pin
-volatile byte state = LOW;
+
+#define inputPin 23
 
 void setup() {
-  pinMode(ledPin, OUTPUT);
-  pinMode(interruptPin, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(interruptPin), blink, CHANGE);
+  Serial.begin(9600);
+  pinMode(inputPin, INPUT);
 }
 
 void loop() {
-  digitalWrite(ledPin, state);
-}
-
-void blink() {
-  state = !state;
+  int IOstate;
+  IOstate = digitalRead(inputPin);
+  Serial.println(IOstate);
+  delay(200); // delay 200ms for next GPIO read
 }
