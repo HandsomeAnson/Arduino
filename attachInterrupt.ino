@@ -1,17 +1,25 @@
-const byte ledPin = 2;       // Builtin-LED pin
-const byte interruptPin = 0; // BOOT/IO0 button pin
-volatile byte state = LOW;
+#define ADC_ch A0
+#define ADC_level 1000  
+#define sampleDelay 200
+unsigned long initTime;
 
-void setup() {
-  pinMode(ledPin, OUTPUT);
-  pinMode(interruptPin, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(interruptPin), blink, CHANGE);
+void setup(){
+  Serial.begin(9600);
+  analogSetPinAttenuation(ADC_ch,ADC_11db);
+  adcAttachPin(ADC_ch);
+
+  initTime = millis();
+  while(analogRead(ADC_ch)>ADC_level){
+    Serial.print(analogRead(ADC_ch));
+    Serial.print("\t");
+    Serial.println(millis()-initTime);
+    
+  }
+  Serial.println(".....reading ADC......");
 }
-
-void loop() {
-  digitalWrite(ledPin, state);
-}
-
-void blink() {
-  state = !state;
+void loop(){
+  int adc_value;
+  adc_value = analogRead(ADC_ch);
+  Serial.println(adc_value);
+  delay(sampleDelay);
 }
